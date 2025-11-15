@@ -1,48 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="estilos.css">
 </head>
-<body>
-    
-    <div class="carta">
-        <div class ="header">
-        <img src="https://i.pinimg.com/736x/2b/1d/fe/2b1dfec19b945a19ac39641278a6a799.jpg" alt="">
-    </div>
-    
-    <div class="datos">
-        <input id="pok" type="text" placeholder="Escriba el nombre o numero de pokemon">
-    <button onclick="traer()">Buscar</button>
-    <h1 id="nombre"></h1>
-    <h3 id="numero"></h3>
-    <h3 id="altura"></h3>
-    <h3 id="peso"></h3>
-    <h3 id="tipo"></h3>
-    <img id="img" alt="">
-    </div>
 
-    
+<body>
+
+    <div class="carta">
+        <div class="header">
+            <img src="https://i.pinimg.com/736x/2b/1d/fe/2b1dfec19b945a19ac39641278a6a799.jpg" alt="">
+        </div>
+
+        <div class="datos">
+            <input id="pok" type="text" placeholder="Escriba el nombre o numero de pokemon">
+            <button onclick="traer()">Buscar</button>
+            <h1 id="nombre"></h1>
+            <h3 id="numero"></h3>
+            <h3 id="altura"></h3>
+            <h3 id="peso"></h3>
+            <h3 id="tipo"></h3>
+            <img id="img" alt="">
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
-        
-        async function traer(){
+
+        async function traer() {
             let pokemon = document.getElementById("pok").value
-            let res = await axios.get("https://pokeapi.co/api/v2/pokemon/"+pokemon)
+            let res = await axios.get("https://pokeapi.co/api/v2/pokemon/" + pokemon)
             console.log(res);
             document.getElementById("nombre").textContent = res.data.name
-            document.getElementById("numero"). textContent = res.data.id
+            document.getElementById("numero").textContent = res.data.id
             document.getElementById("img").src = res.data.sprites.other["official-artwork"]["front_default"]
-            document.getElementById("altura").textContent = `Estatura: ${(res.data.weight)/100}m`
-            document.getElementById("peso").textContent = `Peso: ${(res.data.weight)/10}Kg`
+            document.getElementById("altura").textContent = `Estatura: ${(res.data.weight) / 100}m`
+            document.getElementById("peso").textContent = `Peso: ${(res.data.weight) / 10}Kg`
             document.getElementById("Tipo").textContent = `Tipo: ${res.data.types.map(tipo => tipo.type.name).join(", ")}`
         }
 
     </script>
-    
+
 </body>
+
 </html>
