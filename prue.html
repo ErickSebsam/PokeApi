@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+
+<body>
+    <input id="pok" type="text" placeholder="Escriba el nombre o numero de pokemon">
+            <button onclick="traer()">Buscar</button>
+    <div class="carta">
+        <div class="p1">
+            <div class="nom-img">
+                <h1 id="nombre"></h1>
+                <img id="img" alt="">
+            </div>
+            <div id="medidas">
+                <div id="alt">
+                    <h3 id="altura"></h3>
+                </div>
+                <div id="pes">
+                    <h3 id="peso"></h3>
+                </div>
+            </div>
+        </div>
+        <div class="p2">
+            <h3 id="numero"></h3>
+            <h2>TIPO</h2>
+            <h3 id="tipo"></h3>
+            <h2>DEBIL CONTRA</h2>
+            <h3 id="debilidades">debilidades</h3>
+        </div>
+        <div class="p3">
+            <h1>ESTADÍSTICAS</h1>
+            <div class="estadis">
+                <div class="barras">
+                    <div class="stack">
+                        <h2>HP: <h2 id="hp"></h2>
+                        </h2>
+                    </div>
+                    <div class="stack">
+                        <h2>Attack: <h2 id="attack"></h2>
+                        </h2>
+                        <div class="stat-bar">
+                            <div class="stat-fill" style="width: 95%;"></div>
+                        </div>
+                    </div>
+                    <div class="stack">
+                        <h2>Defense: <h2 id="defense"></h2>
+                        </h2>
+                        <div class="stat-bar">
+                            <div class="stat-fill" style="width: 95%;"></div>
+                        </div>
+                    </div>
+                    <div class="stack">
+                        <h2>Special attack: <h2 id="special-attack"></h2>
+                        </h2>
+                        <div class="stat-bar">
+                            <div class="stat-fill" style="width: 95%;"></div>
+                        </div>
+                    </div>
+                    <div class="stack">
+                        <h2>special defense: <h2 id="special-defense"></h2>
+                        </h2>
+                        <div class="stat-bar">
+                            <div class="stat-fill" style="width: 95%;"></div>
+                        </div>
+                    </div>
+                    <div class="stack">
+                        <h2>Speed: <h2 id="speed"></h2>
+                        </h2>
+                        <div class="stat-bar">
+                            <div class="stat-fill" style="width: 95%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+  // helper: primera letra mayúscula
+  function capitalize(s) {
+    return s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
+  }
+
+  async function traer() {
+    try {
+      const pokemonInput = document.getElementById("pok").value.trim().toLowerCase() || "1";
+      const res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemonInput}`);
+      const data = res.data;
+
+      // datos básicos
+      document.getElementById("nombre").textContent = capitalize(data.name);
+      document.getElementById("numero").textContent = `#${data.id}`;
+      document.getElementById("img").src = data.sprites.other["official-artwork"]["front_default"] || "";
+      document.getElementById("altura").textContent = `Estatura: ${(data.height) / 10} m`;
+      document.getElementById("peso").textContent = `Peso: ${(data.weight) / 10} Kg`;
+      document.getElementById("tipo").textContent = `Tipo: ${data.types.map(t => capitalize(t.type.name)).join(", ")}`;
+
+      // ---- Debilidades ----
+      // obtener los url de cada tipo (p. ej. https://pokeapi.co/api/v2/type/3/)
+      const typeUrls = data.types.map(t => t.type.url);
+
+      // solicitar todos los endpoints de tipo en paralelo
+      const typeResponses = await Promise.all(typeUrls.map(url => axios.get(url)));
+      // extraer los nombres de double_damage_from de cada tipo
+      const weakNames = new Set();
+      typeResponses.forEach(tr => {
+        const dmg = tr.data.damage_relations.double_damage_from || [];
+        dmg.forEach(d => weakNames.add(d.name));
+      });
+
+      // si quieres también mostrar resistencias o inmunidades:
+      // const resistSet = new Set(); // usar damage_relations.half_damage_from
+      // const immuneSet = new Set();  // usar damage_relations.no_damage_from
+
+      // convertir a array y capitalizar
+      const weakArray = Array.from(weakNames).map(capitalize);
+
+      // mostrar como chips dentro del elemento #debilidades
+      const debElem = document.getElementById("debilidades");
+      debElem.innerHTML = ""; // limpiar
+      if (weakArray.length === 0) {
+        debElem.textContent = "Ninguna";
+      } else {
+        weakArray.forEach(w => {
+          const span = document.createElement("span");
+          span.className = "chip";
+          span.textContent = w;
+          debElem.appendChild(span);
+        });
+      }
+
+      // (opcional) actualizar estadísticas si las tienes
+      const statsMap = {};
+      data.stats.forEach(s => statsMap[s.stat.name] = s.base_stat);
+      document.getElementById("hp").textContent = statsMap.hp ?? "";
+      document.getElementById("attack").textContent = statsMap.attack ?? "";
+      document.getElementById("defense").textContent = statsMap.defense ?? "";
+      document.getElementById("special-attack").textContent = statsMap["special-attack"] ?? "";
+      document.getElementById("special-defense").textContent = statsMap["special-defense"] ?? "";
+      document.getElementById("speed").textContent = statsMap.speed ?? "";
+
+    } catch (err) {
+      console.error(err);
+      alert("No se encontró ese Pokémon o hubo un error. Intenta con el nombre o número correcto.");
+    }
+  }
+
+  // para que cargue Pikachu (o id 1) al inicio si quieres
+  traer();
+</script>
+
+
+</body>
+
+</html>
