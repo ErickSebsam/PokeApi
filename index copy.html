@@ -83,6 +83,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
+
         function capitalizar(palabra) {
             return palabra.charAt(0).toUpperCase() + palabra.slice(1).toLowerCase();
         }
@@ -102,7 +103,22 @@
             document.getElementById("special-attack").textContent = `${res.data.stats["3"]["base_stat"]}`
             document.getElementById("special-defense").textContent = `${res.data.stats["4"]["base_stat"]}`
             document.getElementById("speed").textContent = `${res.data.stats["5"]["base_stat"]}`
+            
         }
+
+         async function traaer_debilidades() {
+            let pokemon = document.getElementById("pok").value
+            let res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemon}`)
+            let debilidad1 = res.data.types["0"]["type"]["url"]
+            let debilidad2 = res.data.types["1"]["type"]["url"]
+            console.log(debilidad2);
+            if (debilidad2 === "undefined"){
+            console.log("no hay tipo 2");
+            }
+        }
+
+        traaer_debilidades()
+
     </script>
 
 </body>
