@@ -10,7 +10,7 @@
 
 <body>
     <input id="pok" type="text" placeholder="Escriba el nombre o numero de pokemon">
-            <button onclick="traer()">Buscar</button>
+    <button onclick="traer()">Buscar</button>
     <div class="carta">
         <div class="p1">
             <div class="nom-img">
@@ -83,6 +83,9 @@
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
+        function capitalizar(palabra) {
+            return palabra.charAt(0).toUpperCase() + palabra.slice(1).toLowerCase();
+        }
         async function traer() {
             let pokemon = document.getElementById("pok").value
             let res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemon}`)
@@ -92,9 +95,14 @@
             document.getElementById("img").src = res.data.sprites.other["official-artwork"]["front_default"]
             document.getElementById("altura").textContent = `Estatura: ${(res.data.height) / 10}m`
             document.getElementById("peso").textContent = `Peso: ${(res.data.weight) / 10}Kg`
-            document.getElementById("tipo").textContent = `Tipo: ${res.data.types.map(tipo => tipo.type.name).join(", ")}`
+            document.getElementById("tipo").textContent = `${capitalizar(res.data.types.map(tipo => tipo.type.name).join(", "))}`
+            document.getElementById("hp").textContent = `${res.data.stats["0"]["base_stat"]}`
+            document.getElementById("attack").textContent = `${res.data.stats["1"]["base_stat"]}`
+            document.getElementById("defense").textContent = `${res.data.stats["2"]["base_stat"]}`
+            document.getElementById("special-attack").textContent = `${res.data.stats["3"]["base_stat"]}`
+            document.getElementById("special-defense").textContent = `${res.data.stats["4"]["base_stat"]}`
+            document.getElementById("speed").textContent = `${res.data.stats["5"]["base_stat"]}`
         }
-        traer()
     </script>
 
 </body>
