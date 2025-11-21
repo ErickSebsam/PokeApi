@@ -9,8 +9,10 @@
 </head>
 
 <body>
+    <div class="buscador">
     <input id="pok" type="text" placeholder="Escriba el nombre o numero de pokemon">
-            <button onclick="traer()">Buscar</button>
+    <button onclick="traer()">Buscar</button>
+</div>
     <div class="carta">
         <div class="p1">
             <div class="nom-img">
@@ -37,124 +39,179 @@
             <h1>ESTADÍSTICAS</h1>
             <div class="estadis">
                 <div class="barras">
-                    <div class="stack">
-                        <h2>HP: <h2 id="hp"></h2>
-                        </h2>
-                    </div>
-                    <div class="stack">
-                        <h2>Attack: <h2 id="attack"></h2>
-                        </h2>
-                        <div class="stat-bar">
-                            <div class="stat-fill" style="width: 95%;"></div>
-                        </div>
-                    </div>
-                    <div class="stack">
-                        <h2>Defense: <h2 id="defense"></h2>
-                        </h2>
-                        <div class="stat-bar">
-                            <div class="stat-fill" style="width: 95%;"></div>
-                        </div>
-                    </div>
-                    <div class="stack">
-                        <h2>Special attack: <h2 id="special-attack"></h2>
-                        </h2>
-                        <div class="stat-bar">
-                            <div class="stat-fill" style="width: 95%;"></div>
-                        </div>
-                    </div>
-                    <div class="stack">
-                        <h2>special defense: <h2 id="special-defense"></h2>
-                        </h2>
-                        <div class="stat-bar">
-                            <div class="stat-fill" style="width: 95%;"></div>
-                        </div>
-                    </div>
-                    <div class="stack">
-                        <h2>Speed: <h2 id="speed"></h2>
-                        </h2>
-                        <div class="stat-bar">
-                            <div class="stat-fill" style="width: 95%;"></div>
-                        </div>
-                    </div>
-                </div>
+
+    <div class="stack">
+        <h2>HP: <span id="hp"></span></h2>
+        <div class="stat-bar">
+            <div class="stat-fill hp-fill"></div>
+        </div>
+    </div>
+
+    <div class="stack">
+        <h2>Attack: <span id="attack"></span></h2>
+        <div class="stat-bar">
+            <div class="stat-fill attack-fill"></div>
+        </div>
+    </div>
+
+    <div class="stack">
+        <h2>Defense: <span id="defense"></span></h2>
+        <div class="stat-bar">
+            <div class="stat-fill defense-fill"></div>
+        </div>
+    </div>
+
+    <div class="stack">
+        <h2>Special Attack: <span id="special-attack"></span></h2>
+        <div class="stat-bar">
+            <div class="stat-fill spatk-fill"></div>
+        </div>
+    </div>
+
+    <div class="stack">
+        <h2>Special Defense: <span id="special-defense"></span></h2>
+        <div class="stat-bar">
+            <div class="stat-fill spdef-fill"></div>
+        </div>
+    </div>
+
+    <div class="stack">
+        <h2>Speed: <span id="speed"></span></h2>
+        <div class="stat-bar">
+            <div class="stat-fill speed-fill"></div>
+        </div>
+    </div>
+
+</div>
+
             </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
-  // helper: primera letra mayúscula
+  const typeColors = {
+    normal: "#A8A878",
+    fire: "#F08030",
+    water: "#6890F0",
+    grass: "#78C850",
+    electric: "#F8D030",
+    ice: "#98D8D8",
+    fighting: "#C03028",
+    poison: "#A040A0",
+    ground: "#E0C068",
+    flying: "#A890F0",
+    psychic: "#F85888",
+    bug: "#A8B820",
+    rock: "#B8A038",
+    ghost: "#705898",
+    dragon: "#7038F8",
+    dark: "#705848",
+    steel: "#B8B8D0",
+    fairy: "#F0B6BC"
+  };
+
+  // Helper
   function capitalize(s) {
     return s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
   }
 
-  async function traer() {
-    try {
-      const pokemonInput = document.getElementById("pok").value.trim().toLowerCase() || "1";
-      const res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemonInput}`);
-      const data = res.data;
+  const maxStat = 255;
 
-      // datos básicos
-      document.getElementById("nombre").textContent = capitalize(data.name);
-      document.getElementById("numero").textContent = `#${data.id}`;
-      document.getElementById("img").src = data.sprites.other["official-artwork"]["front_default"] || "";
-      document.getElementById("altura").textContent = `Estatura: ${(data.height) / 10} m`;
-      document.getElementById("peso").textContent = `Peso: ${(data.weight) / 10} Kg`;
-      document.getElementById("tipo").textContent = `Tipo: ${data.types.map(t => capitalize(t.type.name)).join(", ")}`;
-
-      // ---- Debilidades ----
-      // obtener los url de cada tipo (p. ej. https://pokeapi.co/api/v2/type/3/)
-      const typeUrls = data.types.map(t => t.type.url);
-
-      // solicitar todos los endpoints de tipo en paralelo
-      const typeResponses = await Promise.all(typeUrls.map(url => axios.get(url)));
-      // extraer los nombres de double_damage_from de cada tipo
-      const weakNames = new Set();
-      typeResponses.forEach(tr => {
-        const dmg = tr.data.damage_relations.double_damage_from || [];
-        dmg.forEach(d => weakNames.add(d.name));
-      });
-
-      // si quieres también mostrar resistencias o inmunidades:
-      // const resistSet = new Set(); // usar damage_relations.half_damage_from
-      // const immuneSet = new Set();  // usar damage_relations.no_damage_from
-
-      // convertir a array y capitalizar
-      const weakArray = Array.from(weakNames).map(capitalize);
-
-      // mostrar como chips dentro del elemento #debilidades
-      const debElem = document.getElementById("debilidades");
-      debElem.innerHTML = ""; // limpiar
-      if (weakArray.length === 0) {
-        debElem.textContent = "Ninguna";
-      } else {
-        weakArray.forEach(w => {
-          const span = document.createElement("span");
-          span.className = "chip";
-          span.textContent = w;
-          debElem.appendChild(span);
-        });
-      }
-
-      // (opcional) actualizar estadísticas si las tienes
-      const statsMap = {};
-      data.stats.forEach(s => statsMap[s.stat.name] = s.base_stat);
-      document.getElementById("hp").textContent = statsMap.hp ?? "";
-      document.getElementById("attack").textContent = statsMap.attack ?? "";
-      document.getElementById("defense").textContent = statsMap.defense ?? "";
-      document.getElementById("special-attack").textContent = statsMap["special-attack"] ?? "";
-      document.getElementById("special-defense").textContent = statsMap["special-defense"] ?? "";
-      document.getElementById("speed").textContent = statsMap.speed ?? "";
-
-    } catch (err) {
-      console.error(err);
-      alert("No se encontró ese Pokémon o hubo un error. Intenta con el nombre o número correcto.");
-    }
+  function fillBar(className, value) {
+    const bar = document.querySelector(className);
+    const porcentaje = (value / maxStat) * 100;
+    bar.style.width = porcentaje + "%";
   }
 
-  // para que cargue Pikachu (o id 1) al inicio si quieres
+  async function traer() {
+    const pokemonInput = document.getElementById("pok").value.trim().toLowerCase();
+    const res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemonInput}`);
+    const data = res.data;
+
+    // ----- DATOS BÁSICOS -----
+    document.getElementById("nombre").textContent = capitalize(data.name);
+    document.getElementById("numero").textContent = `#${data.id}`;
+    document.getElementById("img").src = data.sprites.other["official-artwork"]["front_default"] || "";
+    document.getElementById("altura").textContent = `Estatura: ${data.height / 10} m`;
+    document.getElementById("peso").textContent = `Peso: ${data.weight / 10} Kg`;
+
+    const tipos = data.types.map(t => t.type.name);
+    document.getElementById("tipo").textContent = tipos.map(capitalize).join(", ");
+
+    const p1 = document.querySelector(".p1");
+
+    if (tipos.length === 1) {
+      p1.style.background = typeColors[tipos[0]];
+    } else {
+      const c1 = typeColors[tipos[0]];
+      const c2 = typeColors[tipos[1]];
+      p1.style.background = `linear-gradient(135deg, ${c1}, ${c2})`;
+    }
+
+    const tipoElem = document.getElementById("tipo");
+    tipoElem.innerHTML = "";
+
+    tipos.forEach(t => {
+      const chip = document.createElement("span");
+      chip.className = "chip";
+      chip.textContent = capitalize(t);
+      chip.style.background = typeColors[t];
+      chip.style.color = "#fff";
+      tipoElem.appendChild(chip);
+    });
+
+    // ----- DEBILIDADES -----
+    const typeUrls = data.types.map(t => t.type.url);
+    const typeResponses = await Promise.all(typeUrls.map(url => axios.get(url)));
+
+    const weakSet = new Set();
+    typeResponses.forEach(tr => {
+      const dmg = tr.data.damage_relations.double_damage_from;
+      dmg.forEach(d => weakSet.add(d.name));
+    });
+
+    const debElem = document.getElementById("debilidades");
+    debElem.innerHTML = "";
+
+    if (weakSet.size === 0) {
+      debElem.textContent = "Ninguna";
+    } else {
+      weakSet.forEach(w => {
+        const chip = document.createElement("span");
+        chip.className = "chip";
+        chip.textContent = capitalize(w);
+        chip.style.background = typeColors[w] || "#ccc";
+        chip.style.color = "#fff";
+        debElem.appendChild(chip);
+      });
+    }
+
+    // ----- ESTADÍSTICAS -----
+    const statsMap = {};
+    data.stats.forEach(s => statsMap[s.stat.name] = s.base_stat);
+
+    document.getElementById("hp").textContent = statsMap.hp;
+    document.getElementById("attack").textContent = statsMap.attack;
+    document.getElementById("defense").textContent = statsMap.defense;
+    document.getElementById("special-attack").textContent = statsMap["special-attack"];
+    document.getElementById("special-defense").textContent = statsMap["special-defense"];
+    document.getElementById("speed").textContent = statsMap.speed;
+
+    // --- AQUÍ SE LLENAN LAS BARRAS ---
+    fillBar(".hp-fill", statsMap.hp);
+    fillBar(".attack-fill", statsMap.attack);
+    fillBar(".defense-fill", statsMap.defense);
+    fillBar(".spatk-fill", statsMap["special-attack"]);
+    fillBar(".spdef-fill", statsMap["special-defense"]);
+    fillBar(".speed-fill", statsMap.speed);
+  }
+
+  // Opcional: cargar un Pokémon de ejemplo al inicio
   traer();
 </script>
+
+
 
 
 </body>

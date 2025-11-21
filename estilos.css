@@ -1,189 +1,366 @@
 * {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
-/* .carta{
-
-    width: 100;
-    height: 100vh;
-
-}
-.header{
-    width: 100%; 
-    position: relative;
-}
-.header img{
-    object-fit: cover;
-    width: 100%;
-    height: 20vh;
-
-}
-.datos{
-    display: flex;
-    flex-direction: column;
-        flex: center;
-        justify-content: center;
-        align-items: center;
-} */
 body {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #e0e0e0;
-}
-
-.carta {
-    width: 100%;
-    height: 100%;
-    border: 2px solid black;
-    border-radius: 15px;
-    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
-    overflow: hidden;
     font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
+    background: linear-gradient(135deg, #dfe9f3, #ffffff);
+    position: relative; /* <-- IMPORTANTE */
 }
 
-.header {
-    width: 100%;
-    height: 150px;
-    overflow: hidden;
-}
-
-.header img {
-    width: 100%;
-    height: auto;
-    display: block;
-}
-
-.datos {
-    padding: 30px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-}
-
-.datos h2 {
-    margin-bottom: 10px;
-    font-size: 24px;
-    color: #333;
-}
-
-.datos p {
-    font-size: 16px;
-    color: #666;
-    line-height: 1.5;
-}
-
-.datos .info {
-    margin-top: 15px;
-    font-size: 14px;
-    color: #999;
-}
-
-.datos .info span {
-    display: block;
-    margin-bottom: 5px;
-}
-
-.datos .info span strong {
-    color: #333;
-}
-
-.datos .info span:last-child {
-    margin-bottom: 0;
-}
-
-.datos img {
-    width: 20%;
-    height: auto;
-    margin-top: 15px;
-}
-
-
+/* ---- Contenedor principal ---- */
 .carta {
+    width: 90%;
+    max-width: 1100px;
+    background: #ffffff;
+    border-radius: 25px;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    height: 100%;
-    width: 100%;
+    overflow: hidden;
+    box-shadow: 0px 10px 25px rgba(0,0,0,0.2);
+    border: 3px solid #e3e3e3;
 }
 
+/* ---- PANEL 1 ---- */
 .p1 {
+    background: #f5fbff;
     display: flex;
-    border: 1px solid red;
     flex-direction: column;
-    align-items: center;
-    height: 100%;
     justify-content: space-evenly;
-}
-
-.p2 {
-    border: 1px solid blue;
-    display: flex;
-    flex-direction: column;
     align-items: center;
-    height: 100%;
-    justify-content: space-around;
+    padding: 20px;
+    border-right: 2px solid #d6e6f2;
 }
 
-.p3 {
-    padding: 90px 0;
-    border: 1px solid green;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 100%;
-    justify-content: space-between;
+.nom-img h1 {
+    font-size: 28px;
+    color: #333;
 }
 
-.estadis {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-
-.barras {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
-    align-items: center;
-    justify-content: space-evenly;
-
-}
-
-.nom-img {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    gap: 90px;
+#img {
+    width: 180px;
+    height: 180px;
+    object-fit: contain;
+    filter: drop-shadow(0px 5px 10px rgba(0,0,0,0.2));
 }
 
 #medidas {
-    display: flex;
     width: 100%;
-    align-items: center;
+    display: flex;
     justify-content: space-around;
-    padding-bottom: 30px;
+    background: #eaf6ff;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid #cfe7ff;
 }
-/* chips para debilidades */
+
+#medidas h3 {
+    font-size: 18px;
+    color: #333;
+}
+
+
+/* ---- PANEL 2 ---- */
+.p2 {
+    background: #ffffff;
+    text-align: center;
+    padding: 20px;
+    border-right: 2px solid #e5e5e5;
+}
+
+.p2 h2 {
+    margin-top: 20px;
+    font-size: 20px;
+    color: #444;
+    letter-spacing: 1px;
+}
+
+.p2 h3 {
+    font-size: 18px;
+    margin-top: 10px;
+}
+
+/* Debilidades con chips */
 #debilidades {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  justify-content: center;
-  padding: 10px;
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .chip {
-  padding: 6px 10px;
-  border-radius: 999px;
-  background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(0,0,0,0.05));
-  border: 1px solid rgba(0,0,0,0.08);
+  padding: 6px 12px;
+  border-radius: 20px;
+  background-color: #f1f1f1;
+  border: 1px solid #ccc;
+  font-size: 14px;
   font-weight: 600;
-  font-size: 0.9rem;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  color: #333;
+  transition: 0.2s;
+}
+
+.chip:hover {
+    transform: scale(1.1);
+}
+
+
+/* ---- PANEL 3: Estadísticas ---- */
+.p3 {
+    background: #f8f8f8;
+    padding: 30px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.p3 h1 {
+    font-size: 26px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.barras {
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+/* Cada fila */
+.stack h2 {
+    font-size: 16px;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    color: #444;
+}
+
+/* Barra */
+.stat-bar {
+    width: 100%;
+    height: 10px;
+    background: #dcdcdc;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.stat-fill {
+    height: 100%;
+    border-radius: 10px;
+    background-color: #6bc46b;
+    width: 0%;
+    transition: width 0.7s ease;
+}
+
+
+/* ---- Input y botón ---- */
+.buscador {
+    position: absolute;
+    top: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+#pok {
+    width: 250px;
+    padding: 10px;
+    border-radius: 10px;
+    border: 2px solid #b5d8ff;
+    outline: none;
+}
+
+button {
+    padding: 10px 18px;
+    border-radius: 10px;
+    background: #5ca3ff;
+    border: none;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:hover {
+    background: #428af5;
+}
+
+
+/* -------------------------
+   📱 MÓVILES - todo en una sola columna
+------------------------- */
+@media (max-width: 900px) {
+
+    /* El buscador ya no flota encima */
+    body {
+        height: auto;
+        padding-top: 20px;
+        flex-direction: column;
+    }
+    
+    .buscador {
+        position: static;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    #pok {
+        width: 90%;
+    }
+
+    button {
+        width: 50%;
+    }
+
+    /* 🔥 Lo importante: la carta pasa a estar en UNA sola columna */
+    .carta {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+    }
+
+    .p1, .p2, .p3 {
+        border-right: none;
+        border-top: 2px solid #e8e8e8;
+    }
+
+    .p1 {
+        border-top: none; /* la primera no lleva borde arriba */
+    }
+}
+
+
+/* -------------------------
+   📱📱 Teléfonos pequeños
+------------------------- */
+@media (max-width: 500px) {
+
+    #img {
+        width: 120px;
+        height: 120px;
+    }
+
+    .nom-img h1 {
+        font-size: 22px;
+    }
+
+    #medidas h3 {
+        font-size: 16px;
+    }
+
+    .chip {
+        font-size: 12px;
+        padding: 5px 8px;
+    }
+
+    .p2 h2 {
+        font-size: 18px;
+    }
+
+    .p2 h3 {
+        font-size: 16px;
+    }
+
+    .stack h2 {
+        font-size: 14px;
+    }
+}
+
+
+/* -------------------------
+   🖥️ TABLET - dos columnas
+------------------------- */
+@media (min-width: 901px) and (max-width: 1200px) {
+
+    .carta {
+        grid-template-columns: 1fr 1fr; 
+        grid-template-rows: auto auto;
+        height: auto;
+    }
+
+    .p3 {
+        grid-column: span 2;
+        border-left: none;
+        border-top: 2px solid #e8e8e8;
+    }
+}
+
+/* -------------------------
+   📱📱📱 Pantallas MUY pequeñas (≤300px)
+------------------------- */
+@media (max-width: 300px) {
+
+    #pok {
+        width: 95%;
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    button {
+        width: 80%;
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .carta {
+        width: 98%;
+        border-radius: 15px;
+    }
+
+    #img {
+        width: 90px;
+        height: 90px;
+    }
+
+    .nom-img h1 {
+        font-size: 18px;
+        text-align: center;
+    }
+
+    #medidas {
+        flex-direction: column;
+        gap: 5px;
+        padding: 8px;
+    }
+
+    #medidas h3 {
+        font-size: 14px;
+    }
+
+    .chip {
+        font-size: 10px;
+        padding: 4px 6px;
+    }
+
+    .p2 h2 {
+        font-size: 16px;
+    }
+
+    .p2 h3 {
+        font-size: 14px;
+    }
+
+    .stack h2 {
+        font-size: 12px;
+    }
+
+    .barras {
+        width: 100%;
+        gap: 12px;
+    }
+
+    .stat-bar {
+        height: 8px;
+    }
 }
