@@ -111,7 +111,7 @@
     fairy: "#F0B6BC"
   };
 
-  // Helper
+
   function capitalize(s) {
     return s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
   }
@@ -129,7 +129,6 @@
     const res = await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemonInput}`);
     const data = res.data;
 
-    // ----- DATOS BÁSICOS -----
     document.getElementById("nombre").textContent = capitalize(data.name);
     document.getElementById("numero").textContent = `#${data.id}`;
     document.getElementById("img").src = data.sprites.other["official-artwork"]["front_default"] || "";
@@ -161,7 +160,6 @@
       tipoElem.appendChild(chip);
     });
 
-    // ----- DEBILIDADES -----
     const typeUrls = data.types.map(t => t.type.url);
     const typeResponses = await Promise.all(typeUrls.map(url => axios.get(url)));
 
@@ -187,7 +185,6 @@
       });
     }
 
-    // ----- ESTADÍSTICAS -----
     const statsMap = {};
     data.stats.forEach(s => statsMap[s.stat.name] = s.base_stat);
 
@@ -198,7 +195,7 @@
     document.getElementById("special-defense").textContent = statsMap["special-defense"];
     document.getElementById("speed").textContent = statsMap.speed;
 
-    // --- AQUÍ SE LLENAN LAS BARRAS ---
+
     fillBar(".hp-fill", statsMap.hp);
     fillBar(".attack-fill", statsMap.attack);
     fillBar(".defense-fill", statsMap.defense);
@@ -207,7 +204,6 @@
     fillBar(".speed-fill", statsMap.speed);
   }
 
-  // Opcional: cargar un Pokémon de ejemplo al inicio
   traer();
 </script>
 
